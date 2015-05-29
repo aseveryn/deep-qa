@@ -1,0 +1,33 @@
+This the experimental setup used in Yao et al. (2013).
+Downloaded from http://cs.jhu.edu/ ̃xuchen/packages/ jacana-qa-naacl2013-data-results.tar.bz2
+
+===================
+
+This folder contains experiment data and results for the submitted NAACL2013 paper
+entitled "Answer Extraction as Sequence Tagging with Tree Edit Distance".
+
+
+==== Data ====
+
+The data files are in pseudo-xml format (html characters are not escaped):
+
+train.xml:  TRAIN in paper
+train-all.xml:  TRAIN-ALL in paper
+dev.xml:   DEV in paper
+test.xml:  TEST in paper
+
+The dataset was first released and then organized by the following papers:
+
+Mengqiu Wang, Noah A. Smith, and Teruko Mitamura. 2007. What is the Jeopardy model? a quasi-synchronous grammar for QA. In Proceedings of the 2007 Joint Conference on Empirical Methods in Natural Language Processing and Computational Natural Language Learning (EMNLP-CoNLL), pages 22–32, Prague, Czech Republic, June.
+
+Michael Heilman and Noah A. Smith. 2010. Tree edit models for recognizing textual entailments, paraphrases, and answers to questions. In Proceedings of NAACL 2010, pages 1011–1019, Los Angeles, California, June.
+
+Then for the task of answer extraction, it was processed in the following steps:
+
+1. exact numbers are recovered (in the original data numbers are replaced with <num>).
+2. each positive sentence is matched against the TREC pattern file to identify the answer fragments
+3. if multiple match, then manually inspect it.
+
+==== Results ====
+
+The "results" folder contains system output for the answer extraction task.
