@@ -23,6 +23,12 @@ DEPENDENCIES
 Python packages can be easily installed using the standard tool: pip install <package>
 
 
+EMBEDDINGS
+----------
+
+The pre-initialized word2vec embeddings have to be downloaded from [here](https://drive.google.com/folderview?id=0B-yipfgecoSBfkZlY2FFWEpDR3M4Qkw5U055MWJrenE5MTBFVXlpRnd0QjZaMDQxejh1cWs&usp=sharing)
+
+
 BUILD
 -----
 To build the required train/dev/test sets in the suitable format for the network run:
