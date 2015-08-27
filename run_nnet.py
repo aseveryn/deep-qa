@@ -39,11 +39,19 @@ def main():
   print "Running training in the {} setting".format(mode)
 
   data_dir = mode
-  q_train = numpy.load(os.path.join(data_dir, 'train.questions.npy'))
-  a_train = numpy.load(os.path.join(data_dir, 'train.answers.npy'))
-  q_overlap_train = numpy.load(os.path.join(data_dir, 'train.q_overlap_indices.npy'))
-  a_overlap_train = numpy.load(os.path.join(data_dir, 'train.a_overlap_indices.npy'))
-  y_train = numpy.load(os.path.join(data_dir, 'train.labels.npy'))
+
+  if mode in ['TRAIN-ALL']:
+    q_train = numpy.load(os.path.join(data_dir, 'train-all.questions.npy'))
+    a_train = numpy.load(os.path.join(data_dir, 'train-all.answers.npy'))
+    q_overlap_train = numpy.load(os.path.join(data_dir, 'train-all.q_overlap_indices.npy'))
+    a_overlap_train = numpy.load(os.path.join(data_dir, 'train-all.a_overlap_indices.npy'))
+    y_train = numpy.load(os.path.join(data_dir, 'train-all.labels.npy'))
+  else:
+    q_train = numpy.load(os.path.join(data_dir, 'train.questions.npy'))
+    a_train = numpy.load(os.path.join(data_dir, 'train.answers.npy'))
+    q_overlap_train = numpy.load(os.path.join(data_dir, 'train.q_overlap_indices.npy'))
+    a_overlap_train = numpy.load(os.path.join(data_dir, 'train.a_overlap_indices.npy'))
+    y_train = numpy.load(os.path.join(data_dir, 'train.labels.npy'))
 
   q_dev = numpy.load(os.path.join(data_dir, 'dev.questions.npy'))
   a_dev = numpy.load(os.path.join(data_dir, 'dev.answers.npy'))
