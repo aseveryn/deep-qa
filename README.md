@@ -2,7 +2,7 @@
 
 This code implements a convolutional neural network architecture for learning to match question and answer sentences described in the paper:
 
-"Modelling Question-Answer Pairs with Convolutional Neural Networks" submitted to EMNLP, 2015
+Aliaksei Severyn and Alessandro Moschitti. *Learning to Rank Short Text Pairs with Convolutional Deep Neural Networks*. SIGIR, 2015
 
 The network features a state-of-the-art convolutional sentence model, advanced question-answer matching model, and introduces a novel relational model to encode related words in a question-answer pair.
 
