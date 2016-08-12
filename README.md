@@ -77,3 +77,7 @@ In NAACL, 2013.
 Mengqiu Wang, Noah A. Smith, and Teruko Mitaura.
 What is the jeopardy model? a quasi- synchronous grammar for qa.
 In EMNLP, 2007.
+
+# License
+
+This software is licensed under the [Apache 2 license](http://www.apache.org/licenses/LICENSE-2.0).
