@@ -1027,3 +1027,68 @@ class PairwiseL2SVMWithFeatsRegression(PairwiseLogisticRegression):
         weights = T.repeat(weights.dimshuffle('x', 0), y.shape[0], axis=0)
         factors = weights[T.arange(y.shape[0]), y]
         return T.sum(loss * factors)
+
+def trace_back(path, u, v):
+    path_rev = path[::-1]
+    [_, path_ret], _ = theano.scan(fn=lambda x, u, v: [x[u, v], u],
+                                   outputs_info=[u, v],
+                                   sequences=[path_rev])
+    ret = T.concatenate([path_ret[::-1], v.dimshuffle('x')])
+    return ret
+
+
+def viterbi(obs_potentials, chain_potentials):
+    def inner_function(obs, prior_result, chain_potentials):
+        maxscore, maxarg = T.max_and_argmax(prior_result.dimshuffle(0, 1, 'x') + obs.dimshuffle('x', 'x', 0) + chain_potentials, axis=0)
+        return maxscore, maxarg
+
+    initial = T.zeros_like(chain_potentials[0])
+    [score, path], _ = theano.scan(fn=inner_function,
+                             outputs_info=[initial, None],
+                             sequences=[obs_potentials],
+                             non_sequences=chain_potentials)
+    a = score[-1]
+    aa = T.argmax(a)
+    u = aa / a.shape[1]
+    v = aa % a.shape[1]
+    return trace_back(path, u, v)[1:]
+
+
+class CRF(Layer):
+  def __init__(self, num_classes, W=None):
+    if W is None:
+      W_data = np.random.randn(num_classes, num_classes, num_classes).astype(theano.config.floatX) * 0.25
+      W = theano.shared(W_data, borrow=True, name='Transition matrix')
+    self.W = W
+    self.weights = [self.W]
+    self.biases = []
+
+  def output_func(self, inputs):
+    self.inputs = inputs
+    self.y_pred = viterbi(self.inputs, self.W)
+
+  def cost(self, y):
+    def logadd(outputs):
+      def log_sum_exp(X):
+          x = X.max()
+          # log-sum-exp operations are most stable if computed as follows.
+          return x + T.log(T.sum(T.exp(X-x), axis=0))
+
+      initial = T.zeros_like(self.W[0])
+      if outputs.shape[0] == 1:
+        smax = initial.max()
+        return smax + T.log(T.sum(T.exp(initial - smax)))
+      else:
+        score, _ = theano.scan(fn=lambda obs, prior, chain_potentials: log_sum_exp(prior.dimshuffle(0, 1, 'x') + obs.dimshuffle('x', 'x', 0) + chain_potentials),
+                               outputs_info=[initial],
+                               sequences=[outputs],
+                               non_sequences=self.W)
+        smax = score[-1].max()
+        return smax + T.log(T.sum(T.exp(score[-1] - smax)))
+
+    def y_score(y, outputs):
+        sum1 = T.sum(outputs[T.arange(y.shape[0]), y])
+        sum2 = T.sum(self.W[y[:-2], y[1:-1], y[2:]])
+        return sum1 + sum2
+
+    return -(y_score(y, self.inputs) - logadd(self.inputs)) #/ y.shape[0]
